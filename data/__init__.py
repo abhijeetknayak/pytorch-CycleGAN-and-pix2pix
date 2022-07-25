@@ -51,8 +51,8 @@ def create_dataset(opt):
         This is the main interface between this package and 'train.py'/'test.py'
 
     Example:
-        >>> from data import create_dataset
-        >>> dataset = create_dataset(opt)
+        from data import create_dataset
+        dataset = create_dataset(opt)
     """
     data_loader = CustomDatasetDataLoader(opt)
     dataset = data_loader.load_data()

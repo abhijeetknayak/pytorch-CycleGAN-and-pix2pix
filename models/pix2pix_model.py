@@ -1,7 +1,10 @@
+import cv2
+import ipdb
 import torch
 from .base_model import BaseModel
 from . import networks
-
+import ipdb
+import sys
 
 class Pix2PixModel(BaseModel):
     """ This class implements the pix2pix model, for learning a mapping from input images to output images given paired data.
@@ -78,7 +81,17 @@ class Pix2PixModel(BaseModel):
 
         The option 'direction' can be used to swap images in domain A and domain B.
         """
+        import numpy as np
         AtoB = self.opt.direction == 'AtoB'
+        # iA = input['A']
+        # iB = input['B']
+        # iA = np.squeeze(iA).numpy()
+        # iB = np.squeeze(iB).numpy()
+        # # ipdb.set_trace()
+        # cv2.imshow('A', iA)
+        # cv2.imshow('B', iB)
+        # cv2.waitKey(0)
+
         self.real_A = input['A' if AtoB else 'B'].to(self.device)
         self.real_B = input['B' if AtoB else 'A'].to(self.device)
         self.image_paths = input['A_paths' if AtoB else 'B_paths']
