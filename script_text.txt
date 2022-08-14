@@ -1,0 +1,15 @@
+python test.py --dataroot oxford/test/ --checkpoints_dir checkpoints/screen_t01/ --model pix2pix --input_nc 1 --output_nc 1 --dataset_mode radarToLidar --batch_size 25 --no_flip --results_dir screen_t01_results --eval --use_wandb
+
+
+scp -r 2019-01-10-12-32-52-radar-oxford-10k/radar/ nayaka@pearl3:/export/nayaka/
+
+
+conda create -n dlenv  python=3.8 pytorch=1.10 cudatoolkit=11.3 torchvision -c pytorch -y
+conda activate dlenv
+pip install opencv-python
+pip install ipdb
+pip install open3d
+pip install dominate
+pip install wandb
+pip install visdom
+pip install tensorboard

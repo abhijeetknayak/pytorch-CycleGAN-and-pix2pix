@@ -19,9 +19,10 @@ def scale_to_255(a, min, max, dtype=np.uint8):
     """
     return (((a - min) / float(max - min)) * 255).astype(dtype)
 
-radar_fp = '../data/oxford/sample/radar.timestamps'
-velodyne_right_fp = "../data/oxford/sample/velodyne_right.timestamps"
-velodyne_left_fp = "../data/oxford/sample/velodyne_left.timestamps"
+data_folder = '../../../../export/nayaka/radar-robotcar/2019-01-10-12-32-52-radar-oxford-10k'
+radar_fp = f'{data_folder}/radar.timestamps'
+velodyne_right_fp = f"{data_folder}/velodyne_right.timestamps"
+velodyne_left_fp = f"{data_folder}/velodyne_left.timestamps"
 
 radar_file = open(radar_fp, 'r')
 velodyne_right_file = open(velodyne_right_fp, 'r')
@@ -56,17 +57,17 @@ for time in radar_time:
 vr_closest_times = np.array(vr_closest_times)
 vl_closest_times = np.array(vl_closest_times)
 
-radar_loc = "../data/oxford/sample/radar"
-vl_loc = "../data/oxford/sample/velodyne_left"
-vr_loc = "../data/oxford/sample/velodyne_right"
+radar_loc = f"{data_folder}/radar"
+vl_loc = f"{data_folder}/velodyne_left"
+vr_loc = f"{data_folder}/velodyne_right"
 
-radar_results = "./oxford/radar"
+radar_results = "./oxford/test/radar"
 os.makedirs(radar_results, exist_ok=True)
 
-lidar_results = "./oxford/lidar"
+lidar_results = "./oxford/test/lidar"
 os.makedirs(lidar_results, exist_ok=True)
 
-combined_results = "./oxford/combined"
+combined_results = "./oxford/test/combined"
 os.makedirs(combined_results, exist_ok=True)
 
 counter = 1
@@ -87,7 +88,6 @@ for idx, time in tqdm(enumerate(radar_time)):
     radar_img = ((radar_img - np.min(radar_img)) * (1/(np.max(radar_img) -
                                                        np.min(radar_img))) * 255).astype('uint8')
 
-    ipdb.set_trace()
     file_name = f"{counter}.jpg"
     cv2.imwrite(os.path.join(radar_results, file_name),
                 radar_img.astype(np.uint8))

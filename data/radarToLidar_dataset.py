@@ -51,8 +51,8 @@ class RadarToLidarDataset(BaseDataset):
         BaseDataset.__init__(self, opt)
 
         # Radar and Lidar Image Paths
-        self.radar_root = 'oxford/trainA'
-        self.lidar_root = 'oxford/trainB'
+        self.radar_root = f'{opt.dataroot}/radar'
+        self.lidar_root = f'{opt.dataroot}/lidar'
 
         self.lidar_paths = sorted(make_dataset(self.lidar_root, opt.max_dataset_size))
         self.radar_paths = sorted(make_dataset(self.radar_root, opt.max_dataset_size))
