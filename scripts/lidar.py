@@ -145,29 +145,36 @@ def return_ptcld(vl_path, vr_path, side_range, fwd_range):
     vr_ptcld = velodyne_raw_to_pointcloud(ranges, intensities, angles)
 
     # Add offsets according to dataset
-    vr_ptcld = vr_ptcld + np.array([[0.1], [-0.47], [0.0], [0.0]])
-    vl_ptcld = vl_ptcld + np.array([[0.1], [0.47], [0.0], [0.0]])
+    # vr_ptcld = vr_ptcld + np.array([[0.1], [-0.47], [0.0], [0.0]])
+    # vl_ptcld = vl_ptcld + np.array([[0.1], [0.47], [0.0], [0.0]])
 
     ptcld = np.hstack((vl_ptcld, vr_ptcld))
 
     # send full point cloud
-    points = remove_ground_plane(ptcld)
+    vr_ptcld = remove_ground_plane(vr_ptcld)
+    vl_ptcld = remove_ground_plane(vl_ptcld)
 
     # EXTRACT THE POINTS FOR EACH AXIS
-    x_points = points[0]
-    y_points = points[1]
-    z_points = points[2]
-    i_points = points[3]
+    xr_points, yr_points = vr_ptcld[0], vr_ptcld[1]
+    xl_points, yl_points = vl_ptcld[0], vl_ptcld[1]
+    # y_points = points[1]
+    # z_points = points[2]
+    # i_points = points[3]
 
     # FILTER - To return only indices of points within desired cube
     # Three filters for: Front-to-back, side-to-side, and height ranges
     # Note left side is positive y axis in LIDAR coordinates
-    f_filt = np.logical_and((x_points > fwd_range[0]), (x_points < fwd_range[1]))
-    s_filt = np.logical_and((y_points > -side_range[1]), (y_points < -side_range[0]))
+    f_filt = np.logical_and((xl_points > fwd_range[0]), (xl_points < fwd_range[1]))
+    s_filt = np.logical_and((yl_points > -side_range[1]), (yl_points < -side_range[0]))
     filter = np.logical_and(f_filt, s_filt)
-    indices = np.argwhere(filter).flatten()
+    l_indices = np.argwhere(filter).flatten()
 
-    return points[:, indices]
+    f_filt = np.logical_and((xr_points > fwd_range[0]), (xr_points < fwd_range[1]))
+    s_filt = np.logical_and((yr_points > -side_range[1]), (yr_points < -side_range[0]))
+    filter = np.logical_and(f_filt, s_filt)
+    r_indices = np.argwhere(filter).flatten()
+
+    return vl_ptcld[:, l_indices], vr_ptcld[:, r_indices]
 
 def post_process_lidar(vl_path, vr_path):
     side_range = (-60, 60)  # left-most to right-most
