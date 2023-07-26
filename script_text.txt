@@ -13,3 +13,6 @@ pip install dominate
 pip install wandb
 pip install visdom
 pip install tensorboard
+pip install faiss-gpu
+pip install torchsummary
+pip install flow_vis

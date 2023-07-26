@@ -157,6 +157,7 @@ def return_ptcld(vl_path, vr_path, side_range, fwd_range):
     # EXTRACT THE POINTS FOR EACH AXIS
     xr_points, yr_points = vr_ptcld[0], vr_ptcld[1]
     xl_points, yl_points = vl_ptcld[0], vl_ptcld[1]
+
     # y_points = points[1]
     # z_points = points[2]
     # i_points = points[3]
@@ -166,12 +167,18 @@ def return_ptcld(vl_path, vr_path, side_range, fwd_range):
     # Note left side is positive y axis in LIDAR coordinates
     f_filt = np.logical_and((xl_points > fwd_range[0]), (xl_points < fwd_range[1]))
     s_filt = np.logical_and((yl_points > -side_range[1]), (yl_points < -side_range[0]))
-    filter = np.logical_and(f_filt, s_filt)
+    ego_filt_f = np.logical_or((xl_points < -3.0), (xl_points > 3.0))
+    ego_filt_s = np.logical_or((yl_points < -3.0), (yl_points > 3.0))
+    filter = np.logical_and(f_filt, s_filt, ego_filt_s)
+    filter = np.logical_and(filter, ego_filt_f)
     l_indices = np.argwhere(filter).flatten()
 
     f_filt = np.logical_and((xr_points > fwd_range[0]), (xr_points < fwd_range[1]))
     s_filt = np.logical_and((yr_points > -side_range[1]), (yr_points < -side_range[0]))
-    filter = np.logical_and(f_filt, s_filt)
+    ego_filt_f = np.logical_or((xr_points < -3.0), (xr_points > 3.0))
+    ego_filt_s = np.logical_or((yr_points < -3.0), (yr_points > 3.0))
+    filter = np.logical_and(f_filt, s_filt, ego_filt_s)
+    filter = np.logical_and(filter, ego_filt_f)
     r_indices = np.argwhere(filter).flatten()
 
     return vl_ptcld[:, l_indices], vr_ptcld[:, r_indices]
